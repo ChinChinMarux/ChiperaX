@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Enkripsi-Dekripsi Cipher Klasik</title>
+    <title>ChiperaX</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,6 +13,10 @@
             background-color: #f4f4f4;
         }
         h1 {
+            text-align: center;
+            color: #333;
+        }
+        h3{
             text-align: center;
             color: #333;
         }
@@ -79,11 +83,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Kalkulator Enkripsi/Dekripsi Cipher Klasik</h1>
+        <h1>ChiperaX</h1>
+        <h3>Kalkulator Enkripsi/Dekripsi Cipher Klasik</h3>
         <form method="POST" action="{{ route('cipher.process') }}">
             @csrf
             <div class="form-group">
-                <label for="cipher">Pilih Cipher:</label>
+                <label for="cipher">Pilih Algoritma:</label>
                 <select name="cipher" id="cipher" required>
                     <option value="vigenere" {{ old('cipher')=='vigenere' ? 'selected' : '' }}>Vigenere Cipher</option>
                     <option value="affine" {{ old('cipher')=='affine' ? 'selected' : '' }}>Affine Cipher</option>
@@ -102,7 +107,7 @@
             </div>
 
             <div class="form-group">
-                <label for="text">Teks:</label>
+                <label for="text">Plaintext:</label>
                 <textarea name="text" id="text" required>{{ old('text') }}</textarea>
                 <div class="note">Hanya huruf A-Z yang diproses, selain itu akan dihapus. Otomatis diubah ke UPPERCASE.</div>
             </div>
@@ -114,7 +119,7 @@
                     - Vigenere: kata kunci (huruf)<br>
                     - Affine: dua angka a,b dipisah koma (contoh: 5,8) dengan a koprima 26<br>
                     - Playfair: kata kunci (huruf)<br>
-                    - Hill: Hill: 4 angka untuk 2x2 (a,b,c,d) atau 9 angka untuk 3x3 (a,b,c,d,e,f,g,h,i) determinan harus invertible<br>
+                    - Hill: 4 angka untuk 2x2 (a,b,c,d) atau 9 angka untuk 3x3 (a,b,c,d,e,f,g,h,i) determinan harus invertible<br>
                     - Enigma: 3 huruf posisi awal rotor (contoh: ABC)
                 </div>
             </div>
