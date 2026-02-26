@@ -2,7 +2,6 @@
 namespace App\Services;
 
 class AffineCipher {
-    #Deklarasi logika invers untuk Decryption
     private function modInverse($a, $m) {
         $a = $a % $m;
         for ($x = 1; $x < $m; $x++) {
@@ -10,14 +9,16 @@ class AffineCipher {
         }
         return null;
     }
-    #Encryption
+
     public function encrypt($text, $key) {
-        #Memanggil fungsi Clean Text
         $text = CipherHelper::cleanText($text);
         list($a, $b) = $this->parseKey($key);
-        if ($b >= $a) return "Kunci 'b' harus lebih kecil dari 26";
-        if ($a === null || $b === null) return "Kunci tidak valid";
-        if ($this->modInverse($a, 26) === null) return "Kunci 'a' harus merupakan bilangan prima 26";
+        if ($a === null || $b === null) {
+            return "Kunci tidak valid";
+        }
+        if ($this->modInverse($a, 26) === null) {
+            return "Kunci 'a' harus merupakan bilangan yang relatif prima dengan 26";
+        }
 
         $result = '';
         for ($i = 0; $i < strlen($text); $i++) {
@@ -28,21 +29,25 @@ class AffineCipher {
         }
         return $result;
     }
-    #Decryption
+
     public function decrypt($text, $key) {
-        #Memanggil fungsi Clean Text
         $text = CipherHelper::cleanText($text);
         list($a, $b) = $this->parseKey($key);
-        if ($b >= $a) return "Kunci 'b' harus lebih kecil dari 26";
-        if ($a === null || $b === null) return "Kunci tidak valid";
+        if ($a === null || $b === null) {
+            return "Kunci tidak valid";
+        }
         $inv = $this->modInverse($a, 26);
-        if ($inv === null) return "Kunci 'a' harus merupakan bilangan prima 2";
+        if ($inv === null) {
+            return "Kunci 'a' harus merupakan bilangan yang relatif prima dengan 26";
+        }
 
         $result = '';
         for ($i = 0; $i < strlen($text); $i++) {
             $char = $text[$i];
             $y = ord($char) - ord('A');
-            $dec = ($inv * ($y - $b + 26)) % 26;
+            // Normalisasi selisih agar selalu positif dalam rentang 0-25
+            $diff = (($y - $b) % 26 + 26) % 26;
+            $dec = ($inv * $diff) % 26;
             $result .= chr($dec + ord('A'));
         }
         return $result;
@@ -50,10 +55,15 @@ class AffineCipher {
 
     private function parseKey($key) {
         $parts = explode(',', $key);
-        if (count($parts) != 2) return [null, null];
+        if (count($parts) != 2) {
+            return [null, null];
+        }
         $a = intval(trim($parts[0]));
         $b = intval(trim($parts[1]));
-        if ($a < 1 || $a > 25 || $b < 0 || $b > 25) return [null, null];
+        // a: 1-25, b: non-negatif (tanpa batas atas)
+        if ($a < 1 || $a > 25 || $b < 0) {
+            return [null, null];
+        }
         return [$a, $b];
     }
 }

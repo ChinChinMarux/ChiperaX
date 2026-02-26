@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChiperaX — Kitab Sandi Kuno</title>
+    <title>ChiperaX</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -492,6 +492,7 @@
 
                 <!-- Header -->
                 <div class="header">
+                    <div class = "note">Evan Adkara Christian Putra - 21120123130086 / Kripto C</div>
                     <div class="top-ornament">
                         <div class="ornament-line"></div>
                         <div class="ornament-dot"></div>
