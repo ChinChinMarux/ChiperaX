@@ -37,7 +37,6 @@ class HillCipher {
     } else { // n=3
         $det = 0;
         for ($i=0; $i<3; $i++) {
-            // minor untuk elemen baris 0 kolom $i
             $minor = $this->minor($matrix, 0, $i);
             $det += $matrix[0][$i] * $this->determinant($minor, 2) * (($i % 2 == 0) ? 1 : -1);
         }
@@ -111,16 +110,15 @@ private function minor($matrix, $row, $col) {
     public function encrypt($text, $key) {
     $text = CipherHelper::cleanText($text);
     $parsed = $this->parseKey($key);
-    if (!$parsed) return "Invalid key (need 4 or 9 numbers between 0-25)";
+    if (!$parsed) return "Kunci tidak valid";
     $matrix = $parsed['matrix'];
     $n = $parsed['n'];
     // Cek determinan invertible
     $det = $this->determinant($matrix, $n);
     if ($this->modInverse($det, 26) === null) {
-        return "Key matrix is not invertible modulo 26";
+        return "Matriks kunci tidak inversible";
     }
 
-    // Padding jika perlu
     $len = strlen($text);
     $remainder = $len % $n;
     if ($remainder != 0) {
@@ -133,7 +131,7 @@ private function minor($matrix, $row, $col) {
         for ($j=0; $j<$n; $j++) {
             $block[] = ord($text[$i+$j]) - ord('A');
         }
-        // Enkripsi: C = M * K mod 26? Biasanya Hill menggunakan C = K * M (matriks kunci kali vektor kolom). Tergantung konvensi. Kita gunakan vektor baris dikali matriks? Lebih umum: hasil = matriks kunci * vektor kolom. Tapi karena kita menggunakan representasi baris, kita kalikan matriks dengan vektor kolom. Jadi untuk setiap blok, kita hitung:
+        // Enkripsi: C = M * K mod 26
         $enc = array_fill(0, $n, 0);
         for ($r=0; $r<$n; $r++) {
             $sum = 0;
@@ -152,17 +150,16 @@ private function minor($matrix, $row, $col) {
     public function decrypt($text, $key) {
     $text = CipherHelper::cleanText($text);
     $parsed = $this->parseKey($key);
-    if (!$parsed) return "Invalid key";
+    if (!$parsed) return "Kunci tidak valid";
     $matrix = $parsed['matrix'];
     $n = $parsed['n'];
     $inv = $this->inverseMatrix($matrix, $n);
-    if (!$inv) return "Key matrix is not invertible modulo 26";
+    if (!$inv) return "Matriks kunci tidak inversible";
 
-    // Pastikan panjang teks kelipatan n, jika tidak, mungkin padding? Tapi teks cipher seharusnya sudah kelipatan.
+    // Pastikan panjang teks kelipatan n
     $len = strlen($text);
     if ($len % $n != 0) {
-        // Bisa tambah padding? Tapi lebih baik return error.
-        return "Ciphertext length must be multiple of $n";
+        return "Panjang ciphertext harus sepanjang $n";
     }
 
     $result = '';
@@ -183,7 +180,6 @@ private function minor($matrix, $row, $col) {
             $result .= chr($dec[$j] + ord('A'));
         }
     }
-    // Hapus padding? Biasanya hasil dekripsi mungkin memiliki 'X' di akhir jika ada padding. Kita tidak hapus otomatis.
     return $result;
 }
 }

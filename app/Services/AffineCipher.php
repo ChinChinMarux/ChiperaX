@@ -15,8 +15,9 @@ class AffineCipher {
         #Memanggil fungsi Clean Text
         $text = CipherHelper::cleanText($text);
         list($a, $b) = $this->parseKey($key);
-        if ($a === null || $b === null) return "Invalid key";
-        if ($this->modInverse($a, 26) === null) return "Key 'a' must be coprime with 26";
+        if ($b >= $a) return "Kunci 'b' harus lebih kecil dari 26";
+        if ($a === null || $b === null) return "Kunci tidak valid";
+        if ($this->modInverse($a, 26) === null) return "Kunci 'a' harus merupakan bilangan prima 26";
 
         $result = '';
         for ($i = 0; $i < strlen($text); $i++) {
@@ -32,9 +33,10 @@ class AffineCipher {
         #Memanggil fungsi Clean Text
         $text = CipherHelper::cleanText($text);
         list($a, $b) = $this->parseKey($key);
-        if ($a === null || $b === null) return "Invalid key";
+        if ($b >= $a) return "Kunci 'b' harus lebih kecil dari 26";
+        if ($a === null || $b === null) return "Kunci tidak valid";
         $inv = $this->modInverse($a, 26);
-        if ($inv === null) return "Key 'a' must be coprime with 26";
+        if ($inv === null) return "Kunci 'a' harus merupakan bilangan prima 2";
 
         $result = '';
         for ($i = 0; $i < strlen($text); $i++) {

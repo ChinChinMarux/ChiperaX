@@ -7,7 +7,7 @@ class EnigmaCipher {
         2 => 'AJDKSIRUXBLHWTMCQGZNPYFVOE', // Rotor II
         3 => 'BDFHJLCPRTXVZNYEIWGAKMUSQO', // Rotor III
     ];
-    private $reflector = 'YRUHQSLDPXNGOKMIEBFZCWVJAT'; // Reflector B
+    private $reflector = 'YRUHQSLDPXNGOKMIEBFZCWVJAT'; // Reflektor B
     private $rotorPositions = [0, 0, 0];
     private $rotorOrder = [1, 2, 3]; // urutan rotor dari kiri ke kanan
 

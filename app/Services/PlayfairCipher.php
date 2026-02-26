@@ -86,12 +86,22 @@ class PlayfairCipher {
 
     public function decrypt($text, $key) {
         $matrix = $this->prepareKey($key);
-        $digraphs = $this->processText($text);
+        
+        $text = CipherHelper::cleanText($text);
+        $digraphs = [];
+        $chunks = str_split($text, 2);
+        foreach ($chunks as $chunk) {
+            if (strlen($chunk) == 2) {
+                $digraphs[] = [$chunk[0], $chunk[1]];
+            }
+        }
+
         $result = '';
         foreach ($digraphs as $pair) {
             list($a, $b) = $pair;
             list($r1, $c1) = $this->findPosition($matrix, $a);
             list($r2, $c2) = $this->findPosition($matrix, $b);
+            
             if ($r1 == $r2) {
                 $result .= $matrix[$r1][($c1-1+5)%5];
                 $result .= $matrix[$r2][($c2-1+5)%5];
@@ -103,6 +113,13 @@ class PlayfairCipher {
                 $result .= $matrix[$r2][$c1];
             }
         }
+
+        // OPSIONAL: Bersihkan padding huruf 'Q' di karakter terakhir
+        // (Ini akan membuat AKUIAWAQ kembali menjadi AKUIAWA)
+        if (substr($result, -1) === 'Q') {
+            $result = substr($result, 0, -1);
+        }
+
         return $result;
     }
 }
